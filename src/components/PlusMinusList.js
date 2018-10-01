@@ -14,22 +14,37 @@ import { withStyles } from "@material-ui/core/styles"
 import type { } from "../typings"
 import { ActionRows } from "./helpers"
 import type { ActionRowsAction as Action } from "./helpers"
+import EditingControls from "./EditControls"
 
 
 const styles = (theme: any) => ({
   buttonIcon: {
     cursor: "pointer"
   },
+  plusMinusRow: {
+    display: "block",
+    width: "100%",
+    position: "relative"
+  },
   tools: {
     position: "absolute",
-    right: "0px"
+    right: "0px",
+    top: "0px"
   }
 })
 
 
-type RowProps = {
+
+export type PlusMinusRow<V> = {
+  key: string | number,
+  content: any, // React component
+  value: V
+}
+
+/*
+type RowProps<V> = {
   classes: any,
-  row: PlusMinusRow,
+  row: PlusMinusRow<V>,
   onAction: Action => void
 }
 
@@ -37,8 +52,8 @@ type RowState = {
   showTools: boolean
 }
 
-class Row extends React.Component<RowProps, RowState> {
-  constructor(props: RowProps) {
+class Row<V> extends React.Component<RowProps<V>, RowState> {
+  constructor(props: RowProps<V>) {
     super(props)
     this.state = {
       showTools: false
@@ -49,50 +64,73 @@ class Row extends React.Component<RowProps, RowState> {
     const { classes, row, onAction } = this.props
     const { showTools } = this.state
 
-    return (<ListItem key={row.key} 
-                      className={classes.plusMinusRow}
-                      onMouseEnter={()=>this.setState({showTools: true})}
-                      onMouseLeave={()=>this.setState({showTools: false})}> 
-
-      <div key="content"> {row.content} </div>
+    return (<div key="content"  key={row.key} 
+                          className={classes.plusMinusRow}
+                          onMouseEnter={()=>this.setState({showTools: true})}
+                          onMouseLeave={()=>this.setState({showTools: false})}> 
+        {row.content} 
       {showTools ? <div key="tools" className={classes.tools}>
         <div key="row-1">
           <AddIcon className={classes.buttonIcon} onClick={()=>onAction("insert")}/>
-          <UpIcon className={classes.buttonIcon} onClick={()=>onAction("move-up")} /></div>
+          <UpIcon className={classes.buttonIcon} onClick={()=>onAction("move-up")} />
+        </div>
         <div key="row-2">
           <RemoveIcon className={classes.buttonIcon} onClick={()=>onAction("delete")} />
           <DownIcon className={classes.buttonIcon} onClick={()=>onAction("move-down")} />
         </div>
       </div> : ""}
-    </ListItem>)
+    </div>)
+  }
+}
+*/
+
+type RowControlsProps = {
+  classes: any,
+  show: boolean,
+  onAction: string => void
+}
+
+class RowControls extends React.Component<RowControlsProps> {
+  render() {
+    const { show, classes, onAction } =  this.props
+    
+    if (show) return (
+      <div key="tools" className={classes.tools}>
+        <div key="row-1">
+          <AddIcon className={classes.buttonIcon} onClick={()=>onAction("insert")}/>
+          <UpIcon className={classes.buttonIcon} onClick={()=>onAction("move-up")} />
+        </div>
+        <div key="row-2">
+          <RemoveIcon className={classes.buttonIcon} onClick={()=>onAction("delete")} />
+          <DownIcon className={classes.buttonIcon} onClick={()=>onAction("move-down")} />
+        </div>
+      </div>
+    )
   }
 }
 
 
-export type PlusMinusRow = {
-  key: string | number,
-  content: any // React component
-}
-
-type PlusMinusListProps = {
+type PlusMinusListProps<V> = {
   classes: any,
-  rows: PlusMinusRow[],  
-  onChange: PlusMinusRow[] => void,
-  emptyRow: number => PlusMinusRow // Takes index for next row, returns row
+  rows: PlusMinusRow<V>[], // React components
+  onChange: any[] => void,
+  emptyRow: number => PlusMinusRow<V> // Takes index for next row, returns row
 }
 
-const PlusMinusListBase = (props: PlusMinusListProps) => {
+const PlusMinusListBase = (props: PlusMinusListProps<V>) => {
   const { classes, rows, onChange, emptyRow } = props
-  const ars = new ActionRows({rows, onChange, emptyRow})
+  const ars = new ActionRows({rows: rows.map(r=>r.value), onChange, emptyRow})
 
-  return (<List className={classes.plusMinusList}>
-    {rows.map((row, idx)=>{
-      return (<Row  classes={classes} 
-                    key={idx} 
-                    row={row} 
-                    onAction={ars.handleAction(idx)} />)
-    })}
-  </List>)
+  return (<div>{rows.map((row, idx)=> {
+    return (<EditingControls  key={row.key}
+                              options={[]}
+                              classes={classes}
+                              className={classes.plusMinusList} 
+                              children={row.content} 
+                              onSelect={ars.handleAction(idx)} />
+    )
+  })
+}</div>)
 }
 
 

@@ -2,8 +2,8 @@
 type ActionRowsArgs<R> = {
   rows: R[],
   onChange: R[] => void,
-  //emptyRow: (number) => R,
-  onEdit: (number) => void,
+  emptyRow: (number) => R,
+  onEdit?: (number) => void,
   options?: {label: string, value: ActionRowsAction}[]
 }
 
@@ -17,15 +17,15 @@ export type ActionRowsAction =
 export class ActionRows<R> {
   rows: R[]
   onChange: R[] => void
-  //emptyRow: (number) => R
+  emptyRow: (number) => R
   onEdit: (number) => void
   options: {label: string, value: ActionRowsAction}[]
 
   constructor(args: ActionRowsArgs<R>) {
     this.rows = args.rows
     this.onChange = args.onChange
-    //this.emptyRow = args.emptyRow
-    this.onEdit = args.onEdit
+    this.emptyRow = args.emptyRow
+    this.onEdit = args.onEdit || function () {}
     this.options = args.options || [
       {
         label: "Edit",
@@ -81,9 +81,9 @@ export class ActionRows<R> {
   handleInsert = (idx: number) => {
     const rows = this.rows
     this.onChange([].concat(
-      rows.slice(0, idx), 
+      rows.slice(0, idx + 1), 
       this.emptyRow(idx + 1), 
-      rows.slice(idx)))
+      rows.slice(idx + 1)))
   }
 
   handleDelete = (idx: number) => {
@@ -95,7 +95,7 @@ export class ActionRows<R> {
   handleAction = (idx: number) => (action: ActionRowsAction) => {
     switch (action) {
       case "edit":
-        this.handleEdit
+        this.handleEdit(idx)
         break
       case "insert":
         this.handleInsert(idx)

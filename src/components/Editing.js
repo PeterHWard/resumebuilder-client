@@ -1,6 +1,7 @@
 //@flow
 import React from "react"
 import TextField from "@material-ui/core/TextField"
+import Input from "@material-ui/core/Input"
 import Button from "@material-ui/core/Button"
 import Dialog from "@material-ui/core/Dialog"
 import DialogActions from "@material-ui/core/DialogActions"
@@ -33,13 +34,34 @@ const styles = (theme: any) => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 400,
-  },
-  textFieldMultiLine: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    width: 400,
   }
 })
+
+
+type MyTextFieldProps = {
+  classes: any,
+  width?: "full" | "half"
+}
+
+class MyTextFieldBase extends React.Component<any> {
+  render() {
+    const { classes, width } = this.props 
+    const className = (width === "half") 
+      ? classes.textFieldHalf
+      : classes.textFieldFull
+    return (<TextField  variant="outlined" 
+                        margin="dense"
+                        className={className} 
+                        {... Object.assign({}, this.props, {
+                          classes: undefined,
+                          width: undefined
+                        })}>
+    
+    </TextField>)
+  }
+}
+
+const MyTextField = withStyles(styles)(MyTextFieldBase)
 
 
 type EditDateRangeProps = DateRangeData & {
@@ -49,23 +71,23 @@ type EditDateRangeProps = DateRangeData & {
 const EditDateRange = (props: EditDateRangeProps) => {
   const { classes, startDate, endDate, onChange } = props
   
-  return [(<TextField
+  return [(<MyTextField
       key="start"
       label="Start Date"
       type="date"
       value={startDate}
-      className={classes.textFieldHalf}
+      width = "half"
       onChange={value=>onChange({startDate: value, endDate})}
       InputLabelProps={{
         shrink: true,
       }}
     />),
-    (<TextField
+    (<MyTextField
       key="end"
       label="End Date"
       type="date"
       value={endDate}
-      className={classes.textFieldHalf}
+      width = "half"
       onChange={value=>onChange({startDate, endDate: value})}
       InputLabelProps={{
         shrink: true,
@@ -81,14 +103,16 @@ type EditComplexFeatureProps = {
   onSave: ComplexFeatureData => void,
   onCancel: () => void
 }
+
 type EditComplexFeatureState = {
   organization: string,
   label: string,
   parenthetical: string,
   dateRange: DateRangeData,
   description: string,
-  bulletPoints: PlusMinusRow[]
+  bulletPoints: PlusMinusRow<string>[]
 }
+
 class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, EditComplexFeatureState> {
   constructor(props: EditComplexFeatureProps) {
     super(props)
@@ -121,9 +145,10 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
   mkBulletPoint = (value: string) => (idx: number) => {
     const { classes } = this.props    
     return {
-      key: value,
-      content: (<TextField   
-        className={classes.textFieldFull} 
+      key: idx,
+      value: value,
+      content: (<MyTextField   
+        width = "full"
         onChange={(nextValue)=>{
           const bps = this.state.bulletPoints
           this.handleChange("bulletPoints")(
@@ -144,7 +169,7 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
         dateRange: this.state.dateRange,
         description: this.state.description.trim() || undefined,
         bulletPoints: this.state.bulletPoints
-          .map(b=>b.content.value.trim())
+          .map(b=>b.value.trim())
           .filter(v=>v.length)
       })
     } else {
@@ -161,57 +186,57 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
       parenthetical,
       description,
       bulletPoints
-     } = this.state
+    } = this.state
     
     return (<Dialog
-      open={open}
-      onClose={this.handleClose(false)}>
+        open={open}
+        onClose={this.handleClose(false)}>
+      <DialogTitle id="form-dialog-title">Edit Feature</DialogTitle>
         <DialogContent>
-          <form >
-            <div>
-                <EditDateRange  classes={classes} 
-                                onChange={this.handleChange("dateRange")}
-                                {... dateRange} />
-            </div>
-            <div>
-                <TextField  label="Organization" 
-                            className={classes.textFieldFull} 
-                            onChange={this.handleChange("organization")}
-                            value={organization || ""} />
-            </div>
-            <div>
-            <TextField  label="Label" 
-                        required
-                        className={classes.textFieldHalf} 
-                        onChange={this.handleChange("label")}
-                        value={label} />
+          <div>
+            <EditDateRange  classes={classes} 
+                            onChange={this.handleChange("dateRange")}
+                            {... dateRange} />
+          </div>
+          <div>
+            <MyTextField  label="Organization" 
+                          variant="outlined"
+                          width = "full"  
+                          onChange={this.handleChange("organization")}
+                          value={organization || ""} />
+          </div>
+          <div>
+            <MyTextField  label="Label" 
+                          required
+                          width = "full"
+                          onChange={this.handleChange("label")}
+                          value={label} />
             
-            <TextField  label="Parenthetical" 
+            <MyTextField  label="Parenthetical" 
                   className={classes.textFieldHalf} 
                   onChange={this.handleChange("parenthetical")}
                   value={parenthetical || ""} />
-            </div> 
-            <div>
-            <TextField  label="Description" 
+          </div> 
+          <div>
+            <MyTextField  label="Description" 
                 multiline
-                className={classes.textFieldMultiLine} 
+                width = "full"
                 onChange={this.handleChange("description")}
                 value={description || ""} />
-            </div>  
-            <div>
+          </div>  
+          <div>
             <PlusMinusList  classes={classes}
                     onChange={this.handleChange("bulletPoints")}
                     emptyRow={this.mkBulletPoint("")}
                     rows={bulletPoints} />
-            </div>
-        </form>
-      </DialogContent>
+          </div>    
+        </DialogContent>
       <DialogActions>
         <Button onClick={this.handleClose(false)} color="primary">
           Cancel
         </Button>
         <Button onClick={this.handleClose(true)} color="primary">
-          Save
+          Update
         </Button>
       </DialogActions>  
     </Dialog>)

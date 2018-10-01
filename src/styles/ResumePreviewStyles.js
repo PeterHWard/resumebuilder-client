@@ -11,7 +11,7 @@ const ResumePreviewStyles = (theme: any) => ({
   resume: {
     color: "#000000",
     fontSize: "10pt",
-    fontFamily: "Arial, Helvetica, sans-serif"
+    fontFamily: "Veranda, Arial, Helvetica, sans-serif"
   },
   resumePage: {
     margin: "auto"
@@ -49,20 +49,23 @@ const ResumePreviewStyles = (theme: any) => ({
   },
   sectionLabel: {
     marginBottom: "3px",
-    color: "#006666",
-    fontSize: "11pt",
+    color: "#003399",
+    fontSize: "12pt",
     fontWeight: "bold",
     fontFamily: "Georgia, serif"
   },
   sectionContent: {},
 
-  feature: {},
+  feature: {
+    marginBottom: "15px"
+  },
   featureHeader: {
     width: "100%",
     display: "flex",
   },
   featureLabel: {
     width: "60%",
+    fontSize: "10pt",
     fontWeight: "bold",
   },
   featureParens: {
@@ -77,7 +80,9 @@ const ResumePreviewStyles = (theme: any) => ({
   featureBlockText: {
     marginLeft: DEFAULT_INDENTATION
   },
-  featureDescription: {},
+  featureDescription: {
+    marginLeft: DEFAULT_INDENTATION 
+  },
   featureBulletPoints: {
     marginLeft: DEFAULT_INDENTATION
   },
@@ -85,9 +90,11 @@ const ResumePreviewStyles = (theme: any) => ({
   bulletPoint: {
     marginRight: "7px",
     fontWeight: "bold",
-    fontSize: "8pt"
+    fontSize: "12pt"
   },
-  featureOrganization: {},
+  featureOrganization: {
+    fontStyle: "italic"
+  },
   featuresLV: {
     display: "flex",
     marginLeft: DEFAULT_INDENTATION
@@ -103,15 +110,25 @@ const ResumePreviewStyles = (theme: any) => ({
 
 
 export type ResumePreviewStylesType = {
+  resume: string,
+  resumePaper: string,
+  resumePage: string,
+
   dateRange: string,
   header: string,
-  
+  headerName: string,
+  headerContactInfo: string,
+  headerTagLine: string,
+
   section: string,
   sectionLabel: string,
   sectionContent: string,
 
+  bulletPoint: string,
+
   feature: string,
   featureHeader: string,
+  featureBlockText: string,
   featureLabel: string,
   featureParens: string,
   featureDateRange: string,

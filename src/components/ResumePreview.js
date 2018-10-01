@@ -102,7 +102,7 @@ const ComplexFeature = (props: ComplexFeatureProps) => {
     </div> : ""}
     {bulletPoints && bulletPoints.length ? <div className={classes.featureBulletPoints}>
       {bulletPoints.map(bp=>(<div key={bp} className={classes.featureBulletPointItem}>
-        <span className={classes.bulletPoint}>{">"}</span> {bp}
+        <span className={classes.bulletPoint}>{"•"}</span> {bp}
       </div>))}
     </div>: ""}
     
@@ -143,7 +143,7 @@ type SectionComplexFeaturesProps = {
   classes: Classes,
   label: string,
   features: ComplexFeatureData[],
-  onChange: any[] => void
+  onChange: ComplexFeatureData[] => void
 }
 
 type SectionComplexFeaturesState = {
@@ -162,11 +162,13 @@ class SectionComplexFeatures extends React.Component<SectionComplexFeaturesProps
     const { classes, label, features, onChange } = this.props
     const { editingFeature } = this.state
     
-    const ars = new ActionRows<ComplexFeatureData>({
+    const ars = new ActionRows({
       rows: features, 
-      onChange, 
       onChange,
-      emptyRow: ignored => ({}),
+      emptyRow: ignored => ({
+        label: "New Feature",
+        dateRange: {startDate: ""}
+      }),
       onEdit: idx => this.setState({editingFeature: idx})
     })
 
@@ -175,8 +177,8 @@ class SectionComplexFeatures extends React.Component<SectionComplexFeaturesProps
     }
 
     return (<Section classes={classes} label={label}>
-        {features.map(f=>(
-          <EditControls options={ars.options} onSelect={handleSelect}>
+        {features.map((f, idx)=>(
+          <EditControls options={ars.options} onSelect={ars.handleAction(idx)}>
             <ComplexFeature key={f.label} classes={classes} {... f} />
           </EditControls>))}
         
@@ -200,9 +202,11 @@ type SectionLabelValuesFeaturesProps = {
 
 const SectionLabelValuesFeatures = (props: SectionLabelValuesFeaturesProps) => {
   const { classes, label, features } = props
-  return (<Section classes={classes} label={label}>
+  return (
+    <Section classes={classes} label={label}>
       {features.map(f=>(<LabelValuesFeature key={f.label} classes={classes} {... f} />))}
-    </Section>)
+    </Section>
+  )
 }
 
 
@@ -217,46 +221,85 @@ const SectionBlockText = (props: SectionBlockTextProps) => {
 
 
 export type ResumeProps = ResumeData & {
-  classes: Classes
+  classes: Classes,
+  withPaper?: boolean,
+  onChange: ResumeData => void
 }
 
 const ResumePreviewBase = (props: ResumeProps) => {
   const { 
     classes,
     header, 
-    objective
+    objective,
+    onChange,
+    withPaper
   } = props
 
+  const ars = new ActionRows({
+    rows: props.sections, 
+    onChange: nextSections => {
+      onChange(Object.assign({}, props, {sections: nextSections}))
+    },
+    emptyRow: ignored => ({
+      label: "New Section",
+      features: []
+    }),
+    onEdit: idx => {}
+  })
+
   const sections = props.sections
-    .filter(s=>s.features.length)
-    .map(section=>{
-      if (section.features[0].values) {
+    .map((section, idx)=>{
+      const handleUpdate = (nextFeatures) => {
+        ars.update(idx)(Object.assign({}, section, {
+          features: nextFeatures
+        }))
+      }
+
+      if (!section.features || !section.features.length) {
+        return (<div>TODO: Create feature buttons</div>)
+      
+      } else if (section.features[0].values) {
         const features: LabelValues[] = (section.features: any)
         return (<SectionLabelValuesFeatures 
           key={section.label} 
           classes={classes}
           label={section.label}
           features={features} />)
+      
       } else {
-        const features: ComplexFeatureData[] = (section.features: any)
+        const features: ComplexFeatureData[] = (section.features: any) || []
         return (<SectionComplexFeatures 
           key={section.label}
           classes={classes}
           label={section.label}
+          onChange={handleUpdate}
           features={features} />)
       }
     })
-
-  return (
-    <Paper elevation={1} className={classes.resumePaper}>
-      <div id={"resume"} className={classes.resumePage}>
-        <div className={classes.resume}>
+  
+    if (withPaper)
+      return (
+        <Paper elevation={1} className={classes.resumePaper}>
+          <div id={"resume"} className={classes.resumePage}>
+            <div className={classes.resume}>
+              <Header key="header" classes={classes} {... header} /> 
+              <SectionBlockText key="objective" classes={classes} label="Objective" text={objective} />
+              {sections}
+            </div>
+          </div>
+        </Paper>)
+    else return (
+      <div id={"resume"} style={{
+          width: "100%",
+          backgroundColor: "#ffffff", 
+          padding: "50px"}}>
+        <div style={{maxWidth: "750px", minWidth: "750px"}} className={classes.resume}>
           <Header key="header" classes={classes} {... header} /> 
           <SectionBlockText key="objective" classes={classes} label="Objective" text={objective} />
           {sections}
         </div>
       </div>
-    </Paper>)
+    )
 }
 
 const ResumePreview = withStyles(styles)(ResumePreviewBase)

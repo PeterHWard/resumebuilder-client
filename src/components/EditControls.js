@@ -24,7 +24,6 @@ const styles = (theme: any) => ({
 })
 
 
-
 type EditControlsProps = {
   classes: any,
   children: any,

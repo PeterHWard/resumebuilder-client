@@ -11,7 +11,7 @@ export type HeaderData = {
     address: string,
     email: string,
     mobile: string,
-    tagLine: string,
+    tagLine?: string,
     gitHub?: string
 }
 
