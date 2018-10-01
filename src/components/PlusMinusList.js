@@ -13,8 +13,8 @@ import IconButton from "@material-ui/core/IconButton"
 import { withStyles } from "@material-ui/core/styles"
 
 import type { } from "../typings"
-import { ActionRows } from "./helpers"
-import type { ActionRowsAction as Action } from "./helpers"
+import ActionRows from "./ActionRows"
+import type { ActionRowsAction as Action } from "./ActionRows"
 
 
 const styles = (theme: any) => ({
@@ -71,6 +71,7 @@ type PlusMinusListProps<V> = {
   makeRow: RowProps<V> => any
 }
 
+// $FlowFixMe - Convert to class as VSCode doesn't support `const [name] <T>(arg: T) => ...` syntax! 
 const PlusMinusListBase = (props: PlusMinusListProps<V>) => {
   const { classes, values, onChange, makeRow, defaultValue } = props
   

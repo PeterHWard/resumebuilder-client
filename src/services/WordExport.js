@@ -15,8 +15,7 @@ const exportHTML = (name: string, htmlFragment: string, style?: string) => {
     </body>
   </html>`
 
-  const mimeType = "application/msword;charset=utf-8"
-  const blob = new Blob([document], {type: mimeType});
+  const blob = new Blob([document], {type: "application/msword;charset=utf-8"});
   saveAs(blob, name + ".doc")
 }
 

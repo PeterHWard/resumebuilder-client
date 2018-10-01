@@ -20,7 +20,7 @@ import type {
 import styles from "../styles/ResumePreviewStyles"
 import type { ResumePreviewStylesType as Classes } from "../styles/ResumePreviewStyles"
 import EditControls from "./EditControls"
-import { ActionRows } from "./helpers"
+import ActionRows from "./ActionRows"
 
 
 const DateRange = (props: DateRangeData & { classes: Classes }) => {

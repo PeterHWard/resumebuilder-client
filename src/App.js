@@ -16,7 +16,7 @@ const styles = (theme: any) => ({
   },
   main: {
     height: "100vh",
-    paddingTop: "50px",
+    paddingTop: "50px"
   }
 })
 
@@ -66,8 +66,7 @@ class AdHocTest extends React.Component<any> {
       bulletPoints: [
         "Python with Tkinter UI", 
         "PyInstaller standalone application",
-        "Massive productivity enhancer",
-      "a", "b", "c"],
+        "Massive productivity enhancer"],
       description: `On own initiative, wrote and maintain a Python- and regular expression-driven GUI application designed to eliminate many labor-intensive parts of the web copywriting process, such as tedious spec formatting`
     }
     return (

@@ -49,8 +49,8 @@ Sections are the main content of the resume: core competencies, employment histo
 
 ```
 {
-  label: string,
-  features: ComplexFeature[] | LabelValue[]
+    label: string,
+    features: ComplexFeature[] | LabelValue[]
 }
 ```
 
@@ -110,3 +110,4 @@ Takes a start data and optionally an end date string. Currently only the `yyyy-m
 - Editing of Header,
 - Replace backed in `objective` section with customizable `TextBlock` feature.
 - Sever component to persist base resume as well as arbitrary sub resumes and forks from the base resume.
+- Paginate, indicate number of pages.

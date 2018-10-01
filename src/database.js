@@ -9,7 +9,6 @@ const db: ResumeData = {
     address: "175 Eastern Parkway, Brooklyn, NY 11238",
     mobile: "+1 775 223 4210",
     email: "peterhward@outlook.com",
-    //tagLine: "Copywriter/camera nerd turned Pythonista, creating custom product data management solutions for e-commerce..."
   },
 
   objective: "Film nerd turned software developer with a keen focus on full stack web development as a means to solve customer and user needs, currently as applied to building automation and reporting tools for a globally renown electronics retailer.",
@@ -91,12 +90,7 @@ const db: ResumeData = {
         {
           label: `Attrify "Spec Cleaning" Tool`,
           dateRange: {startDate: "2016-04-01"},
-          description: `.NET (C#/F#) VSTO Excel add-in to automate onerous parts of converting legacy specifications to highly structured, category-bound "attributes"`,
-          /*bulletPoints: [
-            "Windows Forms UI elements", 
-            "Various text processing features",
-            "Automatic conversion of U.S. Customary/Metric measurements where missing"
-          ]*/
+          description: `.NET (C#/F#) VSTO Excel add-in to automate onerous parts of converting legacy specifications to highly structured, category-bound "attributes"`
         },
 
         {

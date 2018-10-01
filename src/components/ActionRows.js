@@ -14,6 +14,23 @@ export type ActionRowsAction =
   | "delete"
   | "edit"
 
+/**
+ * Abstraction over logic controlling an editable list of things in a React component.  
+ * 
+ * Internally handles:
+ *   - New row insertion (inserts below)
+ *   - Row deletion
+ *   - Row value update
+ * 
+ * Notifies client component if user wants to edit value. In this case client
+ * is responsible for calling `update()` method with any changes.
+ * 
+ * Optional `options` prop allows for custom mapping of menu text to 
+ * `ActionRowsAction`s.
+ * 
+ * Usage: intended for use within render() method/function of component. 
+ * Components should not inherit from `ActionRows` class.
+ */
 export class ActionRows<R> {
   rows: R[]
   onChange: R[] => void
@@ -115,3 +132,5 @@ export class ActionRows<R> {
     } 
   }
 }
+
+export default ActionRows
