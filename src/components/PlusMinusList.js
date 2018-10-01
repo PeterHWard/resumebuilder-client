@@ -8,13 +8,13 @@ import AddIcon from "@material-ui/icons/AddBox"
 import RemoveIcon from "@material-ui/icons/DeleteOutlined"
 import UpIcon from "@material-ui/icons/KeyboardArrowUp"
 import DownIcon from "@material-ui/icons/KeyboardArrowDown"
+import IconButton from "@material-ui/core/IconButton"
 
 import { withStyles } from "@material-ui/core/styles"
 
 import type { } from "../typings"
 import { ActionRows } from "./helpers"
 import type { ActionRowsAction as Action } from "./helpers"
-import EditingControls from "./EditControls"
 
 
 const styles = (theme: any) => ({
@@ -23,66 +23,14 @@ const styles = (theme: any) => ({
   },
   plusMinusRow: {
     display: "block",
-    width: "100%",
-    position: "relative"
+    width: "800px"
   },
   tools: {
-    position: "absolute",
-    right: "0px",
-    top: "0px"
+    marginTop: "auto",
+    marginBottom: "auto"
   }
 })
 
-
-
-export type PlusMinusRow<V> = {
-  key: string | number,
-  content: any, // React component
-  value: V
-}
-
-/*
-type RowProps<V> = {
-  classes: any,
-  row: PlusMinusRow<V>,
-  onAction: Action => void
-}
-
-type RowState = {
-  showTools: boolean
-}
-
-class Row<V> extends React.Component<RowProps<V>, RowState> {
-  constructor(props: RowProps<V>) {
-    super(props)
-    this.state = {
-      showTools: false
-    }
-  }
-
-  render() {
-    const { classes, row, onAction } = this.props
-    const { showTools } = this.state
-
-    return (<div key="content"  key={row.key} 
-                          className={classes.plusMinusRow}
-                          onMouseEnter={()=>this.setState({showTools: true})}
-                          onMouseLeave={()=>this.setState({showTools: false})}> 
-        {row.content} 
-      {showTools ? <div key="tools" className={classes.tools}>
-        <div key="row-1">
-          <AddIcon className={classes.buttonIcon} onClick={()=>onAction("insert")}/>
-          <UpIcon className={classes.buttonIcon} onClick={()=>onAction("move-up")} />
-        </div>
-        <div key="row-2">
-          <RemoveIcon className={classes.buttonIcon} onClick={()=>onAction("delete")} />
-          <DownIcon className={classes.buttonIcon} onClick={()=>onAction("move-down")} />
-        </div>
-      </div> : ""}
-    </div>)
-  }
-}
-*/
 
 type RowControlsProps = {
   classes: any,
@@ -110,25 +58,45 @@ class RowControls extends React.Component<RowControlsProps> {
 }
 
 
+type RowProps<V> = {
+  idx: number,
+  value: V,
+  onChange: V => void
+}
 type PlusMinusListProps<V> = {
   classes: any,
-  rows: PlusMinusRow<V>[], // React components
   onChange: any[] => void,
-  emptyRow: number => PlusMinusRow<V> // Takes index for next row, returns row
+  values: V[],
+  defaultValue: V,
+  makeRow: RowProps<V> => any
 }
 
 const PlusMinusListBase = (props: PlusMinusListProps<V>) => {
-  const { classes, rows, onChange, emptyRow } = props
-  const ars = new ActionRows({rows: rows.map(r=>r.value), onChange, emptyRow})
+  const { classes, values, onChange, makeRow, defaultValue } = props
+  
+  const ars = new ActionRows({
+    rows: values, 
+    onChange, 
+    emptyRow: idx => defaultValue})
 
-  return (<div>{rows.map((row, idx)=> {
-    return (<EditingControls  key={row.key}
-                              options={[]}
-                              classes={classes}
-                              className={classes.plusMinusList} 
-                              children={row.content} 
-                              onSelect={ars.handleAction(idx)} />
-    )
+  const handleClick = (idx: number, action: Action) => {
+    const partial = ars.handleAction(idx)
+    return () => {
+      partial(action)
+    }
+  }
+
+  return (<div>{values.map((value, idx)=> {
+    const child = makeRow({idx, value, onChange: ars.update(idx)})
+    return (<div key={idx} className={classes.plusMinusRow}>
+      <div>{child}</div>
+      <div className={classes.tools}>
+        <IconButton onClick={handleClick(idx, "insert")}><AddIcon/></IconButton> 
+        <IconButton onClick={handleClick(idx, "delete")}><RemoveIcon/></IconButton>
+        <IconButton onClick={handleClick(idx, "move-up")}><UpIcon/></IconButton>
+        <IconButton onClick={handleClick(idx, "move-down")}><DownIcon/></IconButton>
+      </div>
+    </div>)
   })
 }</div>)
 }

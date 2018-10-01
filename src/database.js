@@ -19,19 +19,19 @@ const db: ResumeData = {
       label: "Technical Skills",
       features: [
         { label: "Language Fluency", 
-          values: ["Scala", "JavaScript (ES6", "Flow", "TypeScript)", "C#", "F#", "Python 2.7", "Java", "HTML", "CSS", "SQL (Oracle", "Postgres)"]},
+          value: ["Scala", "JavaScript (ES6", "Flow", "TypeScript)", "C#", "F#", "Python 2.7", "Java", "HTML", "CSS", "SQL (Oracle", "Postgres)"]},
         { label: "Paradigms", 
-          values: ["OOP", "functional", "MVC"]},
+          value: ["OOP", "functional", "MVC"]},
         { label: "Methodologies", 
-          values: ["Secular; proponent of the best solution for a given project"]},
+          value: ["Secular; proponent of the best solution for a given project"]},
         { label: "Web Stack", 
-          values: ["Scala", "React", "Sangria (GraphQL)", "Oracle RDMS"]},
+          value: ["Scala", "React", "Sangria (GraphQL)", "Oracle RDMS"]},
         { label: "Environments", 
-          values: ["OS X", "Windows Enterprise", "various Linux distros", "PowerShell", "Bash Shell"]},
+          value: ["OS X", "Windows Enterprise", "various Linux distros", "PowerShell", "Bash Shell"]},
         { label: "Tools", 
-          values: ["Visual Studio 2017", "Intellij IDEA", "VS Code", "Git"]},      
+          value: ["Visual Studio 2017", "Intellij IDEA", "VS Code", "Git"]},      
         { label: "Want to Learn", 
-          values: ["Logic programming "]}
+          value: ["Logic programming "]}
       ]
     },
 

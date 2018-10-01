@@ -27,15 +27,15 @@ export type ComplexFeatureData = {
     parenthetical?: string,
     dateRange: DateRangeData,
     description?: string,
-    bulletPoints?: string[]
+    sellingPoints?: string[]
 }
 
-export type LabelValues = {
+export type LabelValue = {
     label: string,
-    values: string[]
+    value: string | string[]
 }
 
-export type FeatureUnion = ComplexFeatureData | LabelValues
+export type FeatureUnion = ComplexFeatureData | LabelValue
 
 export type SectionData = {
   label: string,

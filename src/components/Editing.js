@@ -12,7 +12,6 @@ import DialogTitle from "@material-ui/core/DialogTitle"
 import { withStyles } from "@material-ui/core/styles"
 
 import PlusMinusList from "./PlusMinusList"
-import type { PlusMinusRow } from "./PlusMinusList"
 
 import type { 
   ComplexFeatureData,
@@ -33,7 +32,7 @@ const styles = (theme: any) => ({
   textFieldFull: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 400,
+    width: 500,
   }
 })
 
@@ -110,7 +109,7 @@ type EditComplexFeatureState = {
   parenthetical: string,
   dateRange: DateRangeData,
   description: string,
-  bulletPoints: PlusMinusRow<string>[]
+  bulletPoints: string[]
 }
 
 class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, EditComplexFeatureState> {
@@ -122,8 +121,8 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
       label, 
       parenthetical,
       description,
-      bulletPoints
-     } = props.feature
+      sellingPoints
+    } = props.feature
     
     this.state = {
       organization: organization || "",
@@ -131,9 +130,9 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
       parenthetical: parenthetical || "",
       dateRange: dateRange,
       description: description || "",
-      bulletPoints: (bulletPoints && bulletPoints.length 
-        ? bulletPoints 
-        : [""]).map((bp, idx)=>this.mkBulletPoint(bp)(idx))
+      bulletPoints: sellingPoints && sellingPoints.length 
+        ? sellingPoints
+        : [""]
     }
   }
 
@@ -142,22 +141,17 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
     this.setState({[name]: value})
   }
  
-  mkBulletPoint = (value: string) => (idx: number) => {
-    const { classes } = this.props    
-    return {
-      key: idx,
-      value: value,
-      content: (<MyTextField   
+  mkBulletPoint = (args: {idx: number, value: string, onChange: string => void}) => {
+    const { classes } = this.props   
+    const { idx, value, onChange} = args
+    
+    return (<MyTextField   
+        multiline
+        label={"Selling Point #" + (idx + 1).toString()}
         width = "full"
-        onChange={(nextValue)=>{
-          const bps = this.state.bulletPoints
-          this.handleChange("bulletPoints")(
-            [].concat(bps.slice(0, idx),
-            this.mkBulletPoint(nextValue),
-            bps.slice(idx)))
-        }}
-        value={value} />)
-    }
+        onChange={event=>onChange(event.target.value)}
+        value={value} />
+    )
   }
 
   handleClose = (isSave: boolean) => () => {
@@ -169,8 +163,7 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
         dateRange: this.state.dateRange,
         description: this.state.description.trim() || undefined,
         bulletPoints: this.state.bulletPoints
-          .map(b=>b.value.trim())
-          .filter(v=>v.length)
+          .map(b=>b.trim()).filter(v=>v.length)
       })
     } else {
       this.props.onCancel()
@@ -191,7 +184,7 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
     return (<Dialog
         open={open}
         onClose={this.handleClose(false)}>
-      <DialogTitle id="form-dialog-title">Edit Feature</DialogTitle>
+      <DialogTitle>Edit Feature</DialogTitle>
         <DialogContent>
           <div>
             <EditDateRange  classes={classes} 
@@ -213,22 +206,23 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
                           value={label} />
             
             <MyTextField  label="Parenthetical" 
-                  className={classes.textFieldHalf} 
-                  onChange={this.handleChange("parenthetical")}
-                  value={parenthetical || ""} />
+                          width = "full"
+                          onChange={this.handleChange("parenthetical")}
+                          value={parenthetical || ""} />
           </div> 
           <div>
             <MyTextField  label="Description" 
-                multiline
-                width = "full"
-                onChange={this.handleChange("description")}
-                value={description || ""} />
+                          multiline
+                          width = "full"
+                          onChange={this.handleChange("description")}
+                          value={description || ""} />
           </div>  
           <div>
             <PlusMinusList  classes={classes}
-                    onChange={this.handleChange("bulletPoints")}
-                    emptyRow={this.mkBulletPoint("")}
-                    rows={bulletPoints} />
+                            makeRow={this.mkBulletPoint}
+                            onChange={this.handleChange("bulletPoints")}
+                            defaultValue={""}
+                            values={bulletPoints} />
           </div>    
         </DialogContent>
       <DialogActions>

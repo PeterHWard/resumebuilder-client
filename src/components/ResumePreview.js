@@ -11,7 +11,7 @@ import type {
   ResumeData,
   HeaderData,
   ComplexFeatureData,
-  LabelValues,
+  LabelValue,
   DateRangeData,
   BlockText,
   FeatureUnion
@@ -82,7 +82,7 @@ const ComplexFeature = (props: ComplexFeatureProps) => {
     parenthetical, 
     dateRange, 
     description, 
-    bulletPoints 
+    sellingPoints 
   } = props
 
   return (<div className={classes.feature}>
@@ -100,8 +100,8 @@ const ComplexFeature = (props: ComplexFeatureProps) => {
     {description ? <div className={classes.featureDescription}>
       {description}
     </div> : ""}
-    {bulletPoints && bulletPoints.length ? <div className={classes.featureBulletPoints}>
-      {bulletPoints.map(bp=>(<div key={bp} className={classes.featureBulletPointItem}>
+    {sellingPoints && sellingPoints.length ? <div className={classes.featureBulletPoints}>
+      {sellingPoints.map(bp=>(<div key={bp} className={classes.featureBulletPointItem}>
         <span className={classes.bulletPoint}>{"•"}</span> {bp}
       </div>))}
     </div>: ""}
@@ -110,13 +110,15 @@ const ComplexFeature = (props: ComplexFeatureProps) => {
 }
 
 
-type LabelValuesFeatureProps = LabelValues & { classes: Classes } 
+type LabelValuesFeatureProps = LabelValue & { classes: Classes } 
 
 const LabelValuesFeature = (props: LabelValuesFeatureProps) => {
-  const { classes, label, values } = props
+  const { classes, label, value } = props
   return (<div className={classes.featuresLV}>
     <div className={classes.featureLVLabel}>{label + ": "}</div>
-    <div className={classes.featureLVValues}>{values.join(", ")}</div>
+    <div className={classes.featureLVValues}>
+      {value instanceof Array ? value.join(", ") : value}
+    </div>
   </div>)
 }
 
@@ -197,7 +199,7 @@ class SectionComplexFeatures extends React.Component<SectionComplexFeaturesProps
 type SectionLabelValuesFeaturesProps = {
   classes: Classes,
   label: string,
-  features: LabelValues[]
+  features: LabelValue[]
 }
 
 const SectionLabelValuesFeatures = (props: SectionLabelValuesFeaturesProps) => {
@@ -258,8 +260,8 @@ const ResumePreviewBase = (props: ResumeProps) => {
       if (!section.features || !section.features.length) {
         return (<div>TODO: Create feature buttons</div>)
       
-      } else if (section.features[0].values) {
-        const features: LabelValues[] = (section.features: any)
+      } else if (section.features[0].value) {
+        const features: LabelValue[] = (section.features: any)
         return (<SectionLabelValuesFeatures 
           key={section.label} 
           classes={classes}

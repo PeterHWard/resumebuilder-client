@@ -1,10 +1,5 @@
 // @flow
 import React from "react"
-/*import EditIcon from "@material-ui/icons/Edit"
-import AddIcon from "@material-ui/icons/AddBox"
-import RemoveIcon from "@material-ui/icons/DeleteOutlined"
-import UpIcon from "@material-ui/icons/KeyboardArrowUp"
-import DownIcon from "@material-ui/icons/KeyboardArrowDown"*/
 import IconButton from "@material-ui/core/IconButton"
 import Menu from "@material-ui/core/Menu"
 import MenuItem from "@material-ui/core/MenuItem"

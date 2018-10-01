@@ -109,6 +109,7 @@ export class ActionRows<R> {
         break 
       case "move-down":
         this.handleMove("down", idx)
+        break
       default:
         throw new Error("Invalid action: " + action)
     } 
