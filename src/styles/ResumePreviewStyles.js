@@ -109,7 +109,7 @@ const ResumePreviewStyles = (theme: any) => ({
 })
 
 
-export type ResumePreviewStylesType = {
+export type ResumePreviewClasses = {
   resume: string,
   resumePaper: string,
   resumePage: string,

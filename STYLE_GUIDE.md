@@ -29,9 +29,11 @@ If a React component's props type or state type is identical to a globally defin
 A static JS file of type `ResumeData` that initially feeds the react component tree. This is temporary - in future initial data will be pulled from server or local storage. 
 
 
+## Indentation
+Use 2-space indentation for all JavaScript source files.
+
+
 ## Naming
-
-
 ### Types
 Types that feed data to React components should be suffixed with `Data`. E.g.,
 

@@ -1,11 +1,7 @@
 // @flow
-type ActionRowsArgs<R> = {
-  rows: R[],
-  onChange: R[] => void,
-  emptyRow: (number) => R,
-  onEdit?: (number) => void,
-  options?: {label: string, value: ActionRowsAction}[]
-}
+import React from "react"
+import { func } from "prop-types";
+
 
 export type ActionRowsAction = 
     "move-up" 
@@ -13,6 +9,39 @@ export type ActionRowsAction =
   | "insert" 
   | "delete"
   | "edit"
+
+
+const DEFAULT_OPTIONS = [
+  {
+    label: "Edit",
+    value: "edit"
+  },
+  {
+    label: "Move Up",
+    value: "move-up"
+  },
+  {
+    label: "Move Down",
+    value: "move-down"
+  },
+  {
+    label: "Insert",
+    value: "insert"
+  },
+  {
+    label: "Delete",
+    value: "delete"
+  }
+]
+
+
+type ActionRowsArgs<R> = {
+  rows: R[],
+  onChange: R[] => void,
+  emptyRow: (number) => R,
+  onEdit?: (number) => void,
+  options?: {label: string, value: ActionRowsAction}[]
+}
 
 /**
  * Abstraction over logic controlling an editable list of things in a React component.  
@@ -43,28 +72,7 @@ export class ActionRows<R> {
     this.onChange = args.onChange
     this.emptyRow = args.emptyRow
     this.onEdit = args.onEdit || function () {}
-    this.options = args.options || [
-      {
-        label: "Edit",
-        value: "edit"
-      },
-      {
-        label: "Move Up",
-        value: "move-up"
-      },
-      {
-        label: "Move Down",
-        value: "move-down"
-      },
-      {
-        label: "Insert",
-        value: "insert"
-      },
-      {
-        label: "Delete",
-        value: "delete"
-      }
-    ]
+    this.options = args.options || DEFAULT_OPTIONS
   }
 
   handleEdit = (idx: number) => {

@@ -18,7 +18,7 @@ import type {
 } from "../typings"
 
 import styles from "../styles/ResumePreviewStyles"
-import type { ResumePreviewStylesType as Classes } from "../styles/ResumePreviewStyles"
+import type { ResumePreviewClasses as Classes } from "../styles/ResumePreviewStyles"
 import EditControls from "./EditControls"
 import ActionRows from "./ActionRows"
 

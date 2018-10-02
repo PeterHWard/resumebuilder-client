@@ -218,8 +218,7 @@ class EditComplexFeatureBase extends React.Component<EditComplexFeatureProps, Ed
                           value={description || ""} />
           </div>  
           <div>
-            <PlusMinusList  classes={classes}
-                            makeRow={this.mkBulletPoint}
+            <PlusMinusList  makeRow={this.mkBulletPoint}
                             onChange={this.handleChange("bulletPoints")}
                             defaultValue={""}
                             values={bulletPoints} />
